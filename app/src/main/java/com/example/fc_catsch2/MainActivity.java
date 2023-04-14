@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,11 +23,11 @@ public class MainActivity extends AppCompatActivity {
     private final float xCat = 500;
     private final float yCat = 500;
     private final float deltaCat = 50;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         coordinatesOut = findViewById(R.id.coordinatesOut);
 
@@ -52,15 +51,24 @@ public class MainActivity extends AppCompatActivity {
 
                     if (x < (xCat + deltaCat) && x > (xCat - deltaCat) && y < (yCat + deltaCat) && y > (yCat - deltaCat)) {
 
-                        Toast toast = Toast.makeText(getApplicationContext(), R.string.successful_search, Toast.LENGTH_SHORT);
-                        toast.setGravity(Gravity.LEFT | Gravity.TOP, (int) x, (int) y); // Изменили Gravity на LEFT | TOP
-                        // чтобы тост всплывал в месте, где спрятался кот
+                        LinearLayout toastLayout = new LinearLayout(getApplicationContext());
+                        toastLayout.setOrientation(LinearLayout.VERTICAL);
+                        toastLayout.setGravity(Gravity.START | Gravity.TOP);
 
-                        LinearLayout toastContainer = (LinearLayout) toast.getView();
-                        ImageView cat = new ImageView(getApplicationContext());
-                        cat.setImageResource(R.drawable.found_cat);
-                        toastContainer.addView(cat, 1);
+                        ImageView catImageView = new ImageView(getApplicationContext());
+                        catImageView.setImageResource(R.drawable.found_cat);
+
+                        toastLayout.addView(catImageView);
+                        TextView messageTextView = new TextView(getApplicationContext());
+                        messageTextView.setText(R.string.successful_search);
+                        toastLayout.addView(messageTextView);
+
+                        Toast toast = new Toast(getApplicationContext());
+                        toast.setDuration(Toast.LENGTH_SHORT);
+                        toast.setView(toastLayout);
+                        toast.setGravity(Gravity.START | Gravity.TOP, (int) x, (int) y);
                         toast.show();
+
                     }
                     break;
                 case MotionEvent.ACTION_UP:
@@ -75,5 +83,4 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
     };
-
 }
